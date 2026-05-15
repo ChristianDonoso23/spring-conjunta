@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/christiandonoso/devices")
 public class DeviceController {
-
+    /*Prueba de CI 1*/
     private final DeviceService service;
 
     public DeviceController(DeviceService service) {
