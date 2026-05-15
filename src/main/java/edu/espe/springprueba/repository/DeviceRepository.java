@@ -11,7 +11,7 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     boolean existsLoanByBookTitle(String nombre);
 
     // TAREA 6: Para el reporte
-    long countByReturned(boolean returned);
+    long countByReturned(boolean available);
 
     // NUEVO: Para la Prueba 6 (Búsqueda por nombre parcial)
     List<Device> findByBorrowerNameContainingIgnoreCase(String Categoria);
