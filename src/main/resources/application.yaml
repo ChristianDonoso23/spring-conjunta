@@ -1,29 +1,35 @@
-#Bloque raíz de configruación de Spring Boot
 spring:
-  #Configuración del datasource (conexión a la base de datos).
   datasource:
-    url: jdbc:mysql://localhost:3306/spring_lab?useSSL=false&ServerTimeZone=UTC
-    username: root
-    password: Admin_232003
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  #Configuración del JPA/Hibernate (capa de persistencia).
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
   jpa:
     hibernate:
       ddl-auto: update
-
-    show-sql: true
     properties:
       hibernate:
-        format_sql: true
-    #Configuración de Jackson (serialización JSON)
-    Jackson:
-      serialization:
-        WRITE_DATES_AS_TIMESTAMPS: false
-    #Configuración de DevTools (productividad en desarrollo).
-    devtools:
-      restart:
-        enable: true
-    #Configuración del servidor embebido (Tomcat)
+        # Esto es vital para que Hibernate sepa cómo trabajar con H2 en la nube
+        dialect: org.hibernate.dialect.H2Dialect
 
+  # Habilita esto para poder entrar a la consola desde el navegador en Render
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  sql:
+    init:
+      mode: never
+
+# No olvides el puerto que configuramos en el Dockerfile
 server:
   port: 8081
+
+logging:
+  level:
+    root: warn
+
+app:
+  version: ${APP_VERSION:1.0.0-local}
