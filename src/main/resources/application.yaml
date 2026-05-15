@@ -1,0 +1,29 @@
+#Bloque raíz de configruación de Spring Boot
+spring:
+  #Configuración del datasource (conexión a la base de datos).
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring_lab?useSSL=false&ServerTimeZone=UTC
+    username: root
+    password: Admin_232003
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #Configuración del JPA/Hibernate (capa de persistencia).
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    #Configuración de Jackson (serialización JSON)
+    Jackson:
+      serialization:
+        WRITE_DATES_AS_TIMESTAMPS: false
+    #Configuración de DevTools (productividad en desarrollo).
+    devtools:
+      restart:
+        enable: true
+    #Configuración del servidor embebido (Tomcat)
+
+server:
+  port: 8081
