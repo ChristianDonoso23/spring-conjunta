@@ -26,7 +26,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponse create(DeviceCreateRequest request) {
-        if (repo.existsLoanByBookTitle(request.getNombre())) {
+        if (repo.existsByNombre(request.getNombre())) {
             throw new ConflictException("El dispositivo ya está registrado");
         }
         Device l = new Device();
@@ -64,8 +64,8 @@ public class DeviceServiceImpl implements DeviceService {
     public Map<String, Long> getReport() {
         Map<String, Long> report = new HashMap<>();
         report.put("total", repo.count());
-        report.put("returned", repo.countByReturned(true));
-        report.put("pending", repo.countByReturned(false));
+        report.put("returned", repo.countByAvailable(true));
+        report.put("pending", repo.countByAvailable(false));
         return report;
     }
 

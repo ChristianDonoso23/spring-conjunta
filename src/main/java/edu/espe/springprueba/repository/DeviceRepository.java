@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    Optional<Device> findByBookTitle(String nombre);
-    boolean existsLoanByBookTitle(String nombre);
 
-    // TAREA 6: Para el reporte
-    long countByReturned(boolean available);
+    // Corregido: 'BookTitle' ahora es 'Nombre'
+    Optional<Device> findByNombre(String nombre);
+    boolean existsByNombre(String nombre);
 
-    // NUEVO: Para la Prueba 6 (Búsqueda por nombre parcial)
-    List<Device> findByBorrowerNameContainingIgnoreCase(String Categoria);
+    // TAREA 6: Para el reporte (Cambiado de 'Returned' a 'Available')
+    long countByAvailable(boolean available);
+
+    // NUEVO: Para la Prueba 6 (Búsqueda por categoría parcial)
+    // Corregido: 'BorrowerName' ahora es 'Categoría' (debe tener tilde porque tu entidad tiene tilde)
+    List<Device> findByCategoríaContainingIgnoreCase(String categoria);
 }
