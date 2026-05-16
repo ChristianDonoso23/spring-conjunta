@@ -14,7 +14,7 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     // TAREA 6: Para el reporte (Cambiado de 'Returned' a 'Available')
     long countByAvailable(boolean available);
-
+    boolean existsBySereal(String sereal);
     // NUEVO: Para la Prueba 6 (Búsqueda por categoría parcial)
     // Corregido: 'BorrowerName' ahora es 'Categoría' (debe tener tilde porque tu entidad tiene tilde)
     List<Device> findByCategoríaContainingIgnoreCase(String categoria);

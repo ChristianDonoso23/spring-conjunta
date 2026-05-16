@@ -1,6 +1,7 @@
 package edu.espe.springprueba.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public class Device {
     private String categoría;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "El estock no puede ser negativo")
     private Integer stock = 0;
 
     private boolean available = false;

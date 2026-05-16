@@ -26,7 +26,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponse create(DeviceCreateRequest request) {
-        if (repo.existsByNombre(request.getNombre())) {
+        // CORRECCIÓN PRUEBA 1: Validar por Sereal, no por nombre
+        if (repo.existsBySereal(request.getSereal())) {
             throw new ConflictException("El dispositivo ya está registrado");
         }
         Device l = new Device();
@@ -39,15 +40,26 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceResponse> list() {
-        return repo.findAll().stream().map(this::toResponse).toList();
+    public DeviceResponse returnLoan(Long id) {
+        Device l = repo.findById(id).orElseThrow(() -> new NotFoundException("Préstamo no encontrado"));
+        // CORRECCIÓN PRUEBA 3 y 5: Desactivar es poner available en false (antes estaba en true)
+        l.setAvailable(false);
+        return toResponse(repo.save(l));
     }
 
     @Override
-    public DeviceResponse returnLoan(Long id) {
-        Device l = repo.findById(id).orElseThrow(() -> new NotFoundException("Préstamo no encontrado"));
-        l.setAvailable(true);
-        return toResponse(repo.save(l));
+    public Map<String, Long> getReport() {
+        Map<String, Long> report = new HashMap<>();
+        report.put("total", repo.count());
+        // CORRECCIÓN PRUEBA 4: Los nombres de las llaves deben coincidir con la prueba
+        report.put("available", repo.countByAvailable(true));
+        report.put("unavailable", repo.countByAvailable(false));
+        return report;
+    }
+
+    @Override
+    public List<DeviceResponse> list() {
+        return repo.findAll().stream().map(this::toResponse).toList();
     }
 
     @Override
@@ -58,15 +70,6 @@ public class DeviceServiceImpl implements DeviceService {
         l.setCategoría(req.getCategoria());
         l.setSereal(req.getSereal());
         return toResponse(repo.save(l));
-    }
-
-    @Override
-    public Map<String, Long> getReport() {
-        Map<String, Long> report = new HashMap<>();
-        report.put("total", repo.count());
-        report.put("returned", repo.countByAvailable(true));
-        report.put("pending", repo.countByAvailable(false));
-        return report;
     }
 
     private DeviceResponse toResponse(Device l){
