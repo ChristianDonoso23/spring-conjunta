@@ -7,6 +7,7 @@ import edu.espe.springprueba.service.DeviceService;
 import edu.espe.springprueba.web.advice.ConflictException;
 import edu.espe.springprueba.web.advice.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,7 +52,7 @@ class SpringPruebaApplicationTests {
 
         DeviceCreateRequest reqDuplicado = new DeviceCreateRequest();
         reqDuplicado.setNombre("Otro Dispositivo");
-        reqDuplicado.setSereal("ABC-001"); // Mismo serial
+        reqDuplicado.setSereal("ABC-001");
         reqDuplicado.setCategoria("Laptop");
 
         assertThrows(ConflictException.class, () -> {
@@ -66,12 +67,11 @@ class SpringPruebaApplicationTests {
         device.setNombre("Teclado");
         device.setSereal("TEC-123");
         device.setCategoría("Periféricos");
-        device.setStock(-5); // Stock negativo
+        device.setStock(-5);
 
-        // Asumiendo que usaste validaciones de Jakarta (@Min) o lanzas excepción en el servicio
         assertThrows(Exception.class, () -> {
             deviceRepository.save(device);
-            deviceRepository.flush(); // Fuerza el guardado en BD para disparar la validación
+            deviceRepository.flush();
         });
     }
 
@@ -83,15 +83,14 @@ class SpringPruebaApplicationTests {
         device.setNombre("Monitor");
         device.setSereal("MON-001");
         device.setCategoría("Pantallas");
-        device.setAvailable(true); // Activo
+        device.setAvailable(true);
         device = deviceRepository.save(device);
 
-        // Llamar al endpoint/servicio que lo desactiva (tienes que asegurar que tu servicio ponga available = false)
         deviceService.returnLoan(device.getId());
 
         Device updated = deviceRepository.findById(device.getId()).get();
-        assertFalse(updated.isAvailable()); // Validar que es false
-        assertEquals("Monitor", updated.getNombre()); // Validar que mantiene los otros datos
+        assertFalse(updated.isAvailable());
+        assertEquals("Monitor", updated.getNombre());
     }
 
     // Prueba 4: Estadísticas /report
@@ -104,9 +103,6 @@ class SpringPruebaApplicationTests {
         Map<String, Long> report = deviceService.getReport();
         assertEquals(3L, report.get("total"));
 
-        // ¡OJO AQUÍ! Cambia en tu DeviceServiceImpl para que las llaves sean "available" y "unavailable"
-        // report.put("available", repo.countByAvailable(true));
-        // report.put("unavailable", repo.countByAvailable(false));
         assertEquals(2L, report.get("available"));
         assertEquals(1L, report.get("unavailable"));
     }
@@ -119,12 +115,10 @@ class SpringPruebaApplicationTests {
         device.setAvailable(true);
         device = deviceRepository.save(device);
 
-        // Simulamos la eliminación lógica (desactivar)
         deviceService.returnLoan(device.getId());
 
-        // Verificar que sigue existiendo físicamente en la BD
         assertTrue(deviceRepository.findById(device.getId()).isPresent());
-        // Pero que su estado marca que está "eliminado" (no disponible)
+
         assertFalse(deviceRepository.findById(device.getId()).get().isAvailable());
     }
     // Prueba 6: Funcionalidad extra - Búsqueda por nombre parcial
@@ -134,10 +128,8 @@ class SpringPruebaApplicationTests {
         crearDispositivoConCategoria("Alienware", "Laptop Gamer");
         crearDispositivoConCategoria("TP-Link", "Router");
 
-        // Cambia el método del repositorio al nombre correcto
         List<Device> results = deviceRepository.findByCategoríaContainingIgnoreCase("lap");
 
-        // Debe retornar 2 (Laptop y Laptop Gamer), NO el Router
         assertEquals(2, results.size());
     }
 

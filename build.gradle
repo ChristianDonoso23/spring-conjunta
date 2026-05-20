@@ -40,4 +40,15 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+
+    testLogging {
+        // Muestra en consola cuando la prueba pasa, falla o se salta
+        events "passed", "skipped", "failed"
+
+        // Habilita ver las consultas SQL de Hibernate (STANDARD_OUT)
+        showStandardStreams = true
+
+        // Muestra el error completo si algo falla
+        exceptionFormat = 'full'
+    }
 }
