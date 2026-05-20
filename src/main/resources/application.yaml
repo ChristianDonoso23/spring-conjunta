@@ -12,6 +12,7 @@ spring:
       hibernate:
         # Esto es vital para que Hibernate sepa cómo trabajar con H2 en la nube
         dialect: org.hibernate.dialect.H2Dialect
+    show-sql: true
 
   # Habilita esto para poder entrar a la consola desde el navegador en Render
   h2:
